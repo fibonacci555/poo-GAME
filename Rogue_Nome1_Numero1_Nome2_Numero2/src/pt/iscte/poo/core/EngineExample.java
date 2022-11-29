@@ -35,6 +35,7 @@ public class EngineExample implements Observer {
 	private ArrayList<Point2D> everyPos;
 	private ArrayList<Door> lockDoorPos;
 	private InventoryManagement inv_m;
+	private ArrayList<Room> rooms;
 	
 	public static EngineExample getInstance() throws FileNotFoundException {
 		if (INSTANCE == null)
@@ -55,6 +56,12 @@ public class EngineExample implements Observer {
 		System.out.println(this.atual);
 		hero = new Hero("Hero", new Point2D(4,4));
 		inv_m = new InventoryManagement();
+		rooms = new ArrayList<Room>();
+		for(int i = 0; i != 4; i++) {
+			rooms.add(new Room("room" + i));
+		}
+		
+		
 		
 		
 	}
@@ -81,18 +88,51 @@ public class EngineExample implements Observer {
 	}
 	
 	private void addObjects() throws FileNotFoundException{
+		boolean verif = false;
+		Room room_atual = new Room("");
+		for(Room room : this.rooms) {
+			if(room.getNumber().contains(this.atual)) {
+				room_atual = room;
+				verif = room.getAtivo() == 1;
+				
+			}
+		}
+		
+		if(verif) {
+			
+			
+			this.lockDoorPos = new ArrayList<Door>();
+			this.elements = new ArrayList<GameElement>();
+			
+			this.wallCords = room_atual.getWallCords();
+			this.lockDoorPos = room_atual.getDoors();
+			this.everyPos = room_atual.getEveryPos();
+			this.elements = room_atual.getElements();
+		} else {
+			
 		
 		this.lockDoorPos = new ArrayList<Door>();
-		
+		EntityView a = new EntityView("rooms/"+this.atual);
+		this.elements = new ArrayList<GameElement>();
+		this.elements = a.getElements();
+		}
 		
 		
 		updateLife();
-		EntityView a = new EntityView("rooms/"+this.atual);
+		
+		for(Door door : lockDoorPos) {
+			if(door.getState() == 1) {
+				if(this.wallCords.contains(door.getPosition())) {
+					this.wallCords.remove(door.getPosition());
+					gui.addImage(new Door("DoorOpen", door.getPosition(), door.getDestinationRoom(), door.getDestinationPoint(), door.getKeyID()));}
+			}else {
+				if(!this.wallCords.contains(door.getPosition())) {
+					this.wallCords.add(door.getPosition());
+					gui.addImage(new Door("DoorClosed", door.getPosition(), door.getDestinationRoom(), door.getDestinationPoint(), door.getKeyID()));}
+			}
+		}
 		
 		
-		this.elements = new ArrayList<GameElement>();
-		
-		this.elements = a.getElements();
 		if(((Hero) hero).getLife()> 0) {
 			gui.addImage(hero);
 		}
@@ -108,24 +148,8 @@ public class EngineExample implements Observer {
 			
 			gui.addImage(w);
 		}
-		for(Door door : lockDoorPos) {
-			System.out.println(door.getName() + " - " + door.getState()+ " - " + door.getKeyID());
-		}
-		for(Door door : lockDoorPos) {
-			if(door.getState() == 1) {
-				if(this.wallCords.contains(door.getPosition())) {
-					this.wallCords.remove(door.getPosition());
-					gui.addImage(new Door("DoorOpen", door.getPosition(), door.getDestinationRoom(), door.getDestinationPoint(), door.getKeyID()));
-					
-				}
-			}else {
-				if(!this.wallCords.contains(door.getPosition())) {
-					this.wallCords.add(door.getPosition());
-					gui.addImage(new Door("DoorClosed", door.getPosition(), door.getDestinationRoom(), door.getDestinationPoint(), door.getKeyID()));
-					
-				}
-			}
-		}
+		
+		
 	}
 	
 	private void addWalls() throws FileNotFoundException {
@@ -158,6 +182,16 @@ public class EngineExample implements Observer {
 		}
 	}
 
+	
+	private void sincRooms() {
+		for(Room a : rooms) {
+			if(a.getNumber().contains(this.atual)) {
+				
+				a.setAll(this.elements, this.wallCords, this.everyPos, this.lockDoorPos);
+			}
+		}
+	}
+	
 	
 	private void updateLife() {
 		double life = ((Hero) hero).getLife();
@@ -212,16 +246,11 @@ public class EngineExample implements Observer {
 					}
 					
 					for(Door door1 : lockDoorPos) {
-						
 						gui.removeImage(door1);
 					}
 					
 					start();
 					System.out.println("Nivel passed");
-					
-					
-					
-					
 					hero.setPosition(door.getDestinationPoint());
 					((Hero) hero).setInvetory(inv);
 					
@@ -256,7 +285,10 @@ public class EngineExample implements Observer {
 				gui.addImage(n);
 				
 			}else {
-				this.keys.add((Key) elem);
+				if(!this.keys.contains((Key)elem)) {
+					this.keys.add((Key) elem);
+				}
+				
 				try {
 					
 					doorsUpdate();
@@ -270,67 +302,61 @@ public class EngineExample implements Observer {
 		}
 	}
 	
+//	public void statsLists() {
+//		System.out.println("---------------------------------");
+//		System.out.print("Elements -> ");
+//		for(GameElement elem: elements) {
+//			System.out.print(elem.getName()+ ", ");
+//		}
+//		System.out.println();
+//		System.out.print("Keys -> ");
+//		for(Key elem: keys) {
+//			System.out.print(elem.getID()+ ", ");
+//		}
+//		System.out.println();
+//		System.out.print("lockDoorPos -> ");
+//		for(Door elem: lockDoorPos) {
+//			System.out.print(elem.getKeyID()+ ", ");
+//		}
+//		System.out.println();
+//		
+//		System.out.print("Inventory -> ");
+//		for(GameElement elem: ((Hero) hero).getInvetory()) {
+//			System.out.print(elem.getName()+ ", ");
+//		}
+//		System.out.println();
+//		System.out.print("Rooms -> ");
+//		for(Room elem: rooms) {
+//			System.out.print(elem.getNumber()+ ", ");
+//		}
+//		System.out.println();
+//		System.out.println("---------------------------------");
+//	}
+	
+	
+	
 	@Override
 	public void update(Observed source) {
 		if (ImageMatrixGUI.getInstance().wasWindowClosed() || 0>= (((Hero) hero).getLife())) {
 			gui.removeImage(hero);
 			System.out.println("Ending");	}
 		else {
-			
-			
-		
-		
-			
-			
-			System.out.println("---------------------------------");
-			System.out.print("Elements -> ");
-			for(GameElement elem: elements) {
-				System.out.print(elem.getName()+ ", ");
-			}
-			System.out.println();
-			System.out.print("Keys -> ");
-			for(Key elem: keys) {
-				System.out.print(elem.getID()+ ", ");
-			}
-			System.out.println();
-			System.out.print("lockDoorPos -> ");
-			for(Door elem: lockDoorPos) {
-				System.out.print(elem.getKeyID()+ ", ");
-			}
-			System.out.println();
-			
-			System.out.print("Inventory -> ");
-			for(GameElement elem: ((Hero) hero).getInvetory()) {
-				System.out.print(elem.getName()+ ", ");
-			}
-			System.out.println();
-			System.out.println("---------------------------------");
-			
-			
-			
-			
-			
-			
-			
-			
-			
+			sincRooms();
 			updatePos();
-			for(Key a : keys) {
-				System.out.println(a.getID());
-			}
 			int key = ((ImageMatrixGUI) source).keyPressed();
 			moveAll(key);
-			updatePos();
+			
+			
 			updateInventory();
 			try {
 				doorsUpdate();
 			} catch (FileNotFoundException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 			hits(key);
-			
+		
 			turns++;
+			
 			
 			gui.setStatusMessage("ROGUE Starter Package - Turns:" + turns);
 			gui.update();

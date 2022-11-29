@@ -30,6 +30,8 @@ public class LevelPassing {
 			}
 		}
 		
+		
+		
 		for(Door doorl : doors) {
 			if(doorl.getKeyID() != null && keys != null) {
 				for(Key key : keys) {
@@ -64,9 +66,9 @@ public class LevelPassing {
 			}
 		}
 		
-		for(Door door : doors_new) {
-			System.out.println(door.getName() + " - " + door.getState()+ " - " + door.getKeyID());
-		}
+//		for(Door door : doors_new) {
+//			System.out.println(door.getName() + " - " + door.getState()+ " - " + door.getKeyID());
+//		}
 		
 		
 		return doors_new;
