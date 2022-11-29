@@ -20,7 +20,7 @@ public class Door extends GameElement {
 	public Door(String type, Point2D position, String rd, Point2D dest, String key_id) {
 		super(type,position,1);
 		if (key_id != "0" && type.contains("DoorClosed")) {this.state = TRANCADA; this.key_id = key_id; }else {this.state = DESTRANCADA;}
-		if (key_id != "0") {this.state = TRANCADA; }else {this.state = DESTRANCADA;}
+		
 		this.room_destino = rd;
 		this.destino = dest;
 	}
@@ -54,7 +54,7 @@ public class Door extends GameElement {
 	}
 	
 	public void unlock() {
-		super.setType("DoorUnlocked");
+		super.setType("DoorOpen");
 		this.state = DESTRANCADA;
 	}
 	

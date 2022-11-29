@@ -5,6 +5,7 @@ import java.util.List;
 
 import pt.iscte.poo.gui.ImageMatrixGUI;
 import pt.iscte.poo.gui.ImageTile;
+import pt.iscte.poo.items.Key;
 import pt.iscte.poo.map_construction.Door;
 import pt.iscte.poo.map_construction.Floor;
 import pt.iscte.poo.map_construction.Life;
@@ -29,6 +30,7 @@ public class EngineExample implements Observer {
 	private GameElement hero;
 	private ArrayList<GameElement> elements;
 	private int turns;
+	private ArrayList<Key> keys;
 	private ArrayList<Point2D> wallCords;
 	private ArrayList<Point2D> everyPos;
 	private ArrayList<Door> lockDoorPos;
@@ -49,8 +51,9 @@ public class EngineExample implements Observer {
 		gui.go();
 		
 		this.atual = "room0";
+		this.keys = new ArrayList<Key>();
 		System.out.println(this.atual);
-		
+		hero = new Hero("Hero", new Point2D(4,4));
 		inv_m = new InventoryManagement();
 		
 		
@@ -61,6 +64,8 @@ public class EngineExample implements Observer {
 		
 		addFloor();
 		addObjects();
+		
+		
 		gui.setStatusMessage("ROGUE Starter Package - Turns:" + turns);
 		gui.update();
 		
@@ -78,7 +83,9 @@ public class EngineExample implements Observer {
 	private void addObjects() throws FileNotFoundException{
 		
 		this.lockDoorPos = new ArrayList<Door>();
-		hero = new Hero("Hero", new Point2D(4,4));
+		
+		
+		
 		updateLife();
 		EntityView a = new EntityView("rooms/"+this.atual);
 		
@@ -101,7 +108,9 @@ public class EngineExample implements Observer {
 			
 			gui.addImage(w);
 		}
-		
+		for(Door door : lockDoorPos) {
+			System.out.println(door.getName() + " - " + door.getState()+ " - " + door.getKeyID());
+		}
 		for(Door door : lockDoorPos) {
 			if(door.getState() == 1) {
 				if(this.wallCords.contains(door.getPosition())) {
@@ -183,28 +192,40 @@ public class EngineExample implements Observer {
 	}
 	
 	private void doorsUpdate() throws FileNotFoundException {
+		
 		LevelPassing b = new LevelPassing();
-		this.lockDoorPos = b.verifyDoor(hero, this.lockDoorPos);
+		this.lockDoorPos = b.verifyDoor(hero, this.lockDoorPos,keys, gui);
 		for(Door door : lockDoorPos) {
 			if(door.getState() == 1) {
+				wallCords.remove(door.getPosition());
+				
+				
 				if(hero.getPosition().equals(door.getPosition())) {
 					this.atual = door.getDestinationRoom();
 					for(GameElement i: this.elements) {
 						gui.removeImage(i);
 					}
 					ArrayList<GameElement> inv = ((Hero) hero).getInvetory();
-					for(Door door1: this.lockDoorPos) {
-						if(door1.getName().contains("Key")) {lockDoorPos.remove(door1); gui.removeImage(door1);}
-					}
+					
 					for(GameElement item: ((Hero) hero).getInvetory()) {
 						if(item.getName().contains("Key")) {((Hero) hero).removeInventory(item); gui.removeImage(item);}
 					}
+					
+					for(Door door1 : lockDoorPos) {
+						
+						gui.removeImage(door1);
+					}
+					
 					start();
+					System.out.println("Nivel passed");
+					
 					
 					
 					
 					hero.setPosition(door.getDestinationPoint());
 					((Hero) hero).setInvetory(inv);
+					
+					break;
 				}
 			}
 		}
@@ -235,10 +256,11 @@ public class EngineExample implements Observer {
 				gui.addImage(n);
 				
 			}else {
+				this.keys.add((Key) elem);
 				try {
+					
 					doorsUpdate();
 				} catch (FileNotFoundException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 				((Hero) hero).removeInventory(elem);
@@ -254,8 +276,48 @@ public class EngineExample implements Observer {
 			gui.removeImage(hero);
 			System.out.println("Ending");	}
 		else {
-			updatePos();
 			
+			
+		
+		
+			
+			
+			System.out.println("---------------------------------");
+			System.out.print("Elements -> ");
+			for(GameElement elem: elements) {
+				System.out.print(elem.getName()+ ", ");
+			}
+			System.out.println();
+			System.out.print("Keys -> ");
+			for(Key elem: keys) {
+				System.out.print(elem.getID()+ ", ");
+			}
+			System.out.println();
+			System.out.print("lockDoorPos -> ");
+			for(Door elem: lockDoorPos) {
+				System.out.print(elem.getKeyID()+ ", ");
+			}
+			System.out.println();
+			
+			System.out.print("Inventory -> ");
+			for(GameElement elem: ((Hero) hero).getInvetory()) {
+				System.out.print(elem.getName()+ ", ");
+			}
+			System.out.println();
+			System.out.println("---------------------------------");
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			updatePos();
+			for(Key a : keys) {
+				System.out.println(a.getID());
+			}
 			int key = ((ImageMatrixGUI) source).keyPressed();
 			moveAll(key);
 			updatePos();

@@ -19,6 +19,7 @@ public class Hero extends GameElement implements Movable{
 		super(type,position,1);
 		this.life = 10;
 		this.damage = 1;
+		
 		this.inventory = new ArrayList<>();
 		next = 0;
 	}
@@ -104,7 +105,7 @@ public class Hero extends GameElement implements Movable{
 
 	@Override
 	public int getLayer() {
-		return 0;
+		return 1;
 	}
 
 	@Override
