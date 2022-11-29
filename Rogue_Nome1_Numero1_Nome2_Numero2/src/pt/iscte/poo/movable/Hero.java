@@ -66,13 +66,6 @@ public class Hero extends GameElement implements Movable{
 		return inventory;
 	}
 	
-	public void setInvetory(ArrayList<GameElement> new_inv){
-		this.inventory = new_inv;
-		for(GameElement item : new_inv) {
-			this.next++;
-		}
-	}
-	
 	public void addInventory(GameElement toAdd) {
 		if(inventory.size()<=3) {
 			inventory.add(toAdd);next++;
@@ -81,6 +74,12 @@ public class Hero extends GameElement implements Movable{
 		
 	}
 	
+	public void setInvetory(ArrayList<GameElement> new_inv){
+		this.inventory = new_inv;
+		for(GameElement item : new_inv) {
+			this.next++;
+		}
+	}
 	public void removeInventory(GameElement toAdd) {
 		inventory.remove(toAdd);
 		

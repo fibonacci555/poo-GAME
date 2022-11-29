@@ -92,12 +92,30 @@ public class EngineExample implements Observer {
 		
 		for(GameElement elem :elements) {
 			if(elem.getName().contains("Door")) {this.lockDoorPos.add((Door) elem);}
+			
 				gui.addImage(elem);}
 			
 		addWalls();
 		for (Point2D cord : wallCords) {
 			Wall w = new Wall(cord);
+			
 			gui.addImage(w);
+		}
+		
+		for(Door door : lockDoorPos) {
+			if(door.getState() == 1) {
+				if(this.wallCords.contains(door.getPosition())) {
+					this.wallCords.remove(door.getPosition());
+					gui.addImage(new Door("DoorOpen", door.getPosition(), door.getDestinationRoom(), door.getDestinationPoint(), door.getKeyID()));
+					
+				}
+			}else {
+				if(!this.wallCords.contains(door.getPosition())) {
+					this.wallCords.add(door.getPosition());
+					gui.addImage(new Door("DoorClosed", door.getPosition(), door.getDestinationRoom(), door.getDestinationPoint(), door.getKeyID()));
+					
+				}
+			}
 		}
 	}
 	
@@ -108,7 +126,29 @@ public class EngineExample implements Observer {
 		
 	}
 	
-	
+	private void hits(int key) {
+		System.out.println("Vida: " + ((Hero) hero).getLife() + " | Ataque: "+ ((Hero) hero).getDamage());
+		
+		Hitable h = new Hitable();
+		if(h.isHitable(elements,hero,key) != null) {
+			Movable mob = (Movable) h.isHitable(elements,hero,key);
+			
+			
+			mob.hit(((Hero) hero).getDamage());
+			((Hero) hero).hit(mob.getDamage());
+			updateLife();
+			System.out.println("------------Fight-----------");
+			System.out.println("Hero: " + ((Hero) hero).getLife());
+			System.out.println(((ImageTile) mob).getName() + ": " + mob.getLife());
+			if( ((Movable) h.isHitable(elements,hero,key)).getLife() <= 0) {
+				elements.remove(mob);
+				everyPos.remove(mob);
+				gui.removeImage((ImageTile)mob);}
+			}
+		else {
+		}
+	}
+
 	
 	private void updateLife() {
 		double life = ((Hero) hero).getLife();
@@ -139,47 +179,6 @@ public class EngineExample implements Observer {
 			
 		for (Point2D cord : wallCords) {
 			everyPos.add(cord);
-		}
-		for(Door door : lockDoorPos) {
-			if(door.getState() == 1) {
-				if(this.wallCords.contains(door.getPosition())) {
-					this.wallCords.remove(door.getPosition());
-					gui.addImage(new Door("DoorOpen", door.getPosition(), door.getDestinationRoom(), door.getDestinationPoint(), door.getKeyID()));
-					
-				}
-			}else {
-				if(!this.wallCords.contains(door.getPosition())) {
-					this.wallCords.add(door.getPosition());
-					gui.addImage(new Door("DoorClosed", door.getPosition(), door.getDestinationRoom(), door.getDestinationPoint(), door.getKeyID()));
-					
-				}
-			}
-				
-			
-		}
-		
-	}
-	
-	private void hits(int key) {
-		System.out.println("Vida: " + ((Hero) hero).getLife() + " | Ataque: "+ ((Hero) hero).getDamage());
-		
-		Hitable h = new Hitable();
-		if(h.isHitable(elements,hero,key) != null) {
-			Movable mob = (Movable) h.isHitable(elements,hero,key);
-			
-			
-			mob.hit(((Hero) hero).getDamage());
-			((Hero) hero).hit(mob.getDamage());
-			updateLife();
-			System.out.println("------------Fight-----------");
-			System.out.println("Hero: " + ((Hero) hero).getLife());
-			System.out.println(((ImageTile) mob).getName() + ": " + mob.getLife());
-			if( ((Movable) h.isHitable(elements,hero,key)).getLife() <= 0) {
-				elements.remove(mob);
-				everyPos.remove(mob);
-				gui.removeImage((ImageTile)mob);}
-			}
-		else {
 		}
 	}
 	
@@ -258,7 +257,6 @@ public class EngineExample implements Observer {
 			updatePos();
 			
 			int key = ((ImageMatrixGUI) source).keyPressed();
-
 			moveAll(key);
 			updatePos();
 			updateInventory();

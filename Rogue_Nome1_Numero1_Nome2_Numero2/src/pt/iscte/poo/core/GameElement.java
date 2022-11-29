@@ -28,6 +28,7 @@ public abstract class GameElement implements ImageTile {
 		this.position = pos;
 		this.layer = layer;
 	}
+	
 
 	public void setType(String new_type) {
 		this.type = new_type;
