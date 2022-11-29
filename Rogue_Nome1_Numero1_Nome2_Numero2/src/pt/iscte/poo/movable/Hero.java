@@ -77,9 +77,6 @@ public class Hero extends GameElement implements Movable{
 	
 	public void setInvetory(ArrayList<GameElement> new_inv){
 		this.inventory = new_inv;
-		for(GameElement item : new_inv) {
-			this.next++;
-		}
 	}
 	public void removeInventory(GameElement toAdd) {
 		inventory.remove(toAdd);

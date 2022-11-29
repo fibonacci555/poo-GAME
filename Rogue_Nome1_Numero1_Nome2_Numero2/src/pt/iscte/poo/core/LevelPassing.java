@@ -1,6 +1,9 @@
 package pt.iscte.poo.core;
 
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
+import java.util.ConcurrentModificationException;
+
 import pt.iscte.poo.gui.ImageMatrixGUI;
 import pt.iscte.poo.movable.Hero;
 import pt.iscte.poo.items.Key;
@@ -30,41 +33,45 @@ public class LevelPassing {
 			}
 		}
 		
-		
-		
-		for(Door doorl : doors) {
-			if(doorl.getKeyID() != null && keys != null) {
-				for(Key key : keys) {
-				if (doorl.getKeyID().contains( key.getID()) ) {
-					GameElement a = new Door("DoorOpen",doorl.getPosition(), doorl.getDestinationRoom(),doorl.getDestinationPoint(),key.getID());
-					
-					doors.remove(doorl);
-					gui.removeImage(doorl);
-					doors.add((Door) a);
-					gui.addImage(a);
+		try {
+			for(Door doorl : doors) {
+				if(doorl.getKeyID() != null && keys != null) {
+					for(Key key : keys) {
+					if (doorl.getKeyID().contains( key.getID()) ) {
+						GameElement a = new Door("DoorOpen",doorl.getPosition(), doorl.getDestinationRoom(),doorl.getDestinationPoint(),key.getID());
+						
+						doors_new.remove(doorl);
+						gui.removeImage(doorl);
+						doors_new.add((Door) a);
+						gui.addImage(a);
+						
+					}
 				}
-			}
+				}
+				
 			}
 			
-		}
-		
-		if(door_id != null) {
-			for(String k : keys_IDS) {
-				for(Door door: doors_new) {
-					if(door.getKeyID() != null) {
-						if(door.getKeyID().contains(k)) {
-							
-							GameElement a = new Door("DoorOpen",door.getPosition(), door.getDestinationRoom(),door.getDestinationPoint(),door_id);
-							
-							doors_new.remove(door);
-							gui.removeImage(door);
-							doors_new.add((Door) a);
-							gui.addImage(a);
+			if(door_id != null) {
+				for(String k : keys_IDS) {
+					for(Door door: doors) {
+						if(door.getKeyID() != null) {
+							if(door.getKeyID().contains(k)) {
+								
+								GameElement a = new Door("DoorOpen",door.getPosition(), door.getDestinationRoom(),door.getDestinationPoint(),door_id);
+								
+								doors_new.remove(door);
+								gui.removeImage(door);
+								doors_new.add((Door) a);
+								gui.addImage(a);
+							}
 						}
 					}
 				}
 			}
+		} catch (ConcurrentModificationException door) {
+			
 		}
+		
 		
 //		for(Door door : doors_new) {
 //			System.out.println(door.getName() + " - " + door.getState()+ " - " + door.getKeyID());

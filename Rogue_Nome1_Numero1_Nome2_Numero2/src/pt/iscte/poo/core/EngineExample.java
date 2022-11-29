@@ -302,36 +302,36 @@ public class EngineExample implements Observer {
 		}
 	}
 	
-//	public void statsLists() {
-//		System.out.println("---------------------------------");
-//		System.out.print("Elements -> ");
-//		for(GameElement elem: elements) {
-//			System.out.print(elem.getName()+ ", ");
-//		}
-//		System.out.println();
-//		System.out.print("Keys -> ");
-//		for(Key elem: keys) {
-//			System.out.print(elem.getID()+ ", ");
-//		}
-//		System.out.println();
-//		System.out.print("lockDoorPos -> ");
-//		for(Door elem: lockDoorPos) {
-//			System.out.print(elem.getKeyID()+ ", ");
-//		}
-//		System.out.println();
-//		
-//		System.out.print("Inventory -> ");
-//		for(GameElement elem: ((Hero) hero).getInvetory()) {
-//			System.out.print(elem.getName()+ ", ");
-//		}
-//		System.out.println();
-//		System.out.print("Rooms -> ");
-//		for(Room elem: rooms) {
-//			System.out.print(elem.getNumber()+ ", ");
-//		}
-//		System.out.println();
-//		System.out.println("---------------------------------");
-//	}
+	public void statsLists() {
+		System.out.println("---------------------------------");
+		System.out.print("Elements -> ");
+		for(GameElement elem: elements) {
+			System.out.print(elem.getName()+ ", ");
+		}
+		System.out.println();
+		System.out.print("Keys -> ");
+		for(Key elem: keys) {
+			System.out.print(elem.getID()+ ", ");
+		}
+		System.out.println();
+		System.out.print("lockDoorPos -> ");
+		for(Door elem: lockDoorPos) {
+			System.out.print(elem.getKeyID()+ ", ");
+		}
+		System.out.println();
+		
+		System.out.print("Inventory -> ");
+		for(GameElement elem: ((Hero) hero).getInvetory()) {
+			System.out.print(elem.getName()+ ", ");
+		}
+		System.out.println();
+		System.out.print("Rooms -> ");
+		for(Room elem: rooms) {
+			System.out.print(elem.getNumber()+ ", ");
+		}
+		System.out.println();
+		System.out.println("---------------------------------");
+	}
 	
 	
 	
@@ -345,7 +345,7 @@ public class EngineExample implements Observer {
 			updatePos();
 			int key = ((ImageMatrixGUI) source).keyPressed();
 			moveAll(key);
-			
+			statsLists();
 			
 			updateInventory();
 			try {

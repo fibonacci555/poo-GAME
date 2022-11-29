@@ -21,7 +21,7 @@ public class InventoryManagement {
 			if(elem instanceof Movable || elem.getName().contains("Door")) {
 				
 			}else {
-				if(elem.getPosition().equals(hero.getPosition())) {
+				if((elem.getPosition().equals(hero.getPosition()) && ((Hero) hero).getInvetory().size() < 3)) {
 					return elem;
 				}
 			}
