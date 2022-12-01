@@ -10,6 +10,7 @@ import pt.iscte.poo.map_construction.Door;
 import pt.iscte.poo.map_construction.Treasure;
 import pt.iscte.poo.movable.Bat;
 import pt.iscte.poo.movable.Hero;
+import pt.iscte.poo.movable.Scorpio;
 import pt.iscte.poo.movable.Skeleton;
 import pt.iscte.poo.movable.Thug;
 import pt.iscte.poo.utils.Point2D;
@@ -47,6 +48,8 @@ public abstract class GameElement implements ImageTile {
 			return new Bat(type,pos);
 		case "Thug" :
 			return new Thug(type,pos);
+		case "Scorpio" :
+			return new Scorpio(type,pos);
 		// Items
 		case "Armor" :
 			return new Armor(type,pos);

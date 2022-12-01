@@ -29,6 +29,7 @@ public class EngineExample implements Observer {
 	
 	private GameElement hero;
 	private ArrayList<GameElement> elements;
+	private Points score;
 	private int turns;
 	private ArrayList<Key> keys;
 	private ArrayList<Point2D> wallCords;
@@ -52,6 +53,7 @@ public class EngineExample implements Observer {
 		gui.go();
 		
 		this.atual = "room0";
+		this.score = new Points();
 		this.keys = new ArrayList<Key>();
 		System.out.println(this.atual);
 		hero = new Hero("Hero", new Point2D(4,4));
@@ -105,7 +107,7 @@ public class EngineExample implements Observer {
 			this.elements = new ArrayList<GameElement>();
 			
 			this.wallCords = room_atual.getWallCords();
-			this.lockDoorPos = room_atual.getDoors();
+//			this.lockDoorPos = room_atual.getDoors();
 			this.everyPos = room_atual.getEveryPos();
 			this.elements = room_atual.getElements();
 		} else {
@@ -242,7 +244,7 @@ public class EngineExample implements Observer {
 					ArrayList<GameElement> inv = ((Hero) hero).getInvetory();
 					
 					for(GameElement item: ((Hero) hero).getInvetory()) {
-						if(item.getName().contains("Key")) {((Hero) hero).removeInventory(item); gui.removeImage(item);}
+						if(item.getName().contains("Key")) {((Hero) hero).removeInventory(item,gui);}
 					}
 					
 					for(Door door1 : lockDoorPos) {
@@ -281,8 +283,9 @@ public class EngineExample implements Observer {
 		
 			elements.remove(elem);
 			if(!elem.getName().contains("Key")) {
-				GameElement n = GameElement.create(elem.getName(), new Point2D(10-((Hero) hero).getNext(), 10));
-				gui.addImage(n);
+				elem.setPosition(new Point2D(10-((Hero) hero).getNext(), 10));
+				gui.addImage(elem);
+				
 				
 			}else {
 				if(!this.keys.contains((Key)elem)) {
@@ -295,7 +298,7 @@ public class EngineExample implements Observer {
 				} catch (FileNotFoundException e) {
 					e.printStackTrace();
 				}
-				((Hero) hero).removeInventory(elem);
+				((Hero) hero).removeInventory(elem,gui);
 			}
 			
 			
@@ -337,6 +340,7 @@ public class EngineExample implements Observer {
 	
 	@Override
 	public void update(Observed source) {
+		
 		if (ImageMatrixGUI.getInstance().wasWindowClosed() || 0>= (((Hero) hero).getLife())) {
 			gui.removeImage(hero);
 			System.out.println("Ending");	}
@@ -346,7 +350,8 @@ public class EngineExample implements Observer {
 			int key = ((ImageMatrixGUI) source).keyPressed();
 			moveAll(key);
 			statsLists();
-			
+			inv_m.keyUtility((Hero) hero, key, gui, elements, everyPos);
+			updateLife();
 			updateInventory();
 			try {
 				doorsUpdate();
@@ -354,7 +359,9 @@ public class EngineExample implements Observer {
 				e.printStackTrace();
 			}
 			hits(key);
-		
+			
+			System.out.println(score.updatePoints((Hero) hero, turns));
+
 			turns++;
 			
 			

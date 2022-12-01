@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import pt.iscte.poo.core.GameElement;
 import pt.iscte.poo.core.Movable;
+import pt.iscte.poo.gui.ImageMatrixGUI;
 import pt.iscte.poo.utils.Direction;
 import pt.iscte.poo.utils.Point2D;
 
@@ -58,6 +59,11 @@ public class Hero extends GameElement implements Movable{
 		
 	}
 	
+	
+	public void setLife(int nlife) {
+		this.life = nlife;
+	}
+	
 	public int getLife() {
 		return this.life;
 	}
@@ -68,6 +74,9 @@ public class Hero extends GameElement implements Movable{
 	}
 	
 	public void addInventory(GameElement toAdd) {
+	
+		
+		
 		if(inventory.size()<=3) {
 			inventory.add(toAdd);next++;
 		}
@@ -78,15 +87,19 @@ public class Hero extends GameElement implements Movable{
 	public void setInvetory(ArrayList<GameElement> new_inv){
 		this.inventory = new_inv;
 	}
-	public void removeInventory(GameElement toAdd) {
+	public void removeInventory(GameElement toAdd, ImageMatrixGUI gui) {
 		inventory.remove(toAdd);
+		gui.removeImage(toAdd);
 		
 		next--;
+		
 	}
 	
 	public int getNext() {
 		return next;
 	}
+	
+	
 
 	public int getDamage() {
 		for(GameElement elem:inventory) {
