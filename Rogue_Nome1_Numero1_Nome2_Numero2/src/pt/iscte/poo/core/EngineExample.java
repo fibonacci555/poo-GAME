@@ -26,7 +26,7 @@ public class EngineExample implements Observer {
 	
 	private static EngineExample INSTANCE = null;
 	private ImageMatrixGUI gui = ImageMatrixGUI.getInstance();
-	
+	private boolean winSituation;
 	private GameElement hero;
 	private ArrayList<GameElement> elements;
 	private Points score;
@@ -34,7 +34,9 @@ public class EngineExample implements Observer {
 	private ArrayList<Key> keys;
 	private ArrayList<Point2D> wallCords;
 	private ArrayList<Point2D> everyPos;
-	private ArrayList<Door> lockDoorPos;
+	private ArrayList<Door> lockDoors;
+	private ArrayList<Point2D> lockDoorsPos;
+	
 	private InventoryManagement inv_m;
 	private ArrayList<Room> rooms;
 	
@@ -51,11 +53,11 @@ public class EngineExample implements Observer {
 		gui.registerObserver(this);
 		gui.setSize(GRID_WIDTH, GRID_HEIGHT);
 		gui.go();
-		
+		this.winSituation = false;
 		this.atual = "room0";
 		this.score = new Points();
 		this.keys = new ArrayList<Key>();
-		System.out.println(this.atual);
+		this.lockDoorsPos = new ArrayList<Point2D>();
 		hero = new Hero("Hero", new Point2D(4,4));
 		inv_m = new InventoryManagement();
 		rooms = new ArrayList<Room>();
@@ -70,7 +72,6 @@ public class EngineExample implements Observer {
 
 	public void start() throws FileNotFoundException {
 		
-		
 		addFloor();
 		addObjects();
 		
@@ -78,6 +79,28 @@ public class EngineExample implements Observer {
 		gui.setStatusMessage("ROGUE Starter Package - Turns:" + turns);
 		gui.update();
 		
+		
+	}
+	
+	public void restart() throws FileNotFoundException {
+		System.out.println("Restart");
+		gui.clearImages();
+		this.winSituation = false;
+		this.atual = "room0";
+		hero = new Hero("Hero", new Point2D(4,4));
+		elements.clear();
+		wallCords.clear();
+		lockDoors.clear();
+		lockDoorsPos.clear();
+		everyPos.clear();
+		keys.clear();
+		turns = 0;
+		score.restart();
+		rooms = new ArrayList<Room>();
+		for(int i = 0; i != 4; i++) {
+			rooms.add(new Room("room" + i));
+		}
+		start();
 		
 	}
 	
@@ -91,6 +114,7 @@ public class EngineExample implements Observer {
 	
 	private void addObjects() throws FileNotFoundException{
 		boolean verif = false;
+		
 		Room room_atual = new Room("");
 		for(Room room : this.rooms) {
 			if(room.getNumber().contains(this.atual)) {
@@ -103,17 +127,17 @@ public class EngineExample implements Observer {
 		if(verif) {
 			
 			
-			this.lockDoorPos = new ArrayList<Door>();
+			this.lockDoors = new ArrayList<Door>();
 			this.elements = new ArrayList<GameElement>();
-			
+			this.lockDoorsPos = new ArrayList<Point2D>();
 			this.wallCords = room_atual.getWallCords();
 //			this.lockDoorPos = room_atual.getDoors();
 			this.everyPos = room_atual.getEveryPos();
 			this.elements = room_atual.getElements();
 		} else {
 			
-		
-		this.lockDoorPos = new ArrayList<Door>();
+			this.lockDoorsPos = new ArrayList<Point2D>();
+		this.lockDoors = new ArrayList<Door>();
 		EntityView a = new EntityView("rooms/"+this.atual);
 		this.elements = new ArrayList<GameElement>();
 		this.elements = a.getElements();
@@ -122,17 +146,7 @@ public class EngineExample implements Observer {
 		
 		updateLife();
 		
-		for(Door door : lockDoorPos) {
-			if(door.getState() == 1) {
-				if(this.wallCords.contains(door.getPosition())) {
-					this.wallCords.remove(door.getPosition());
-					gui.addImage(new Door("DoorOpen", door.getPosition(), door.getDestinationRoom(), door.getDestinationPoint(), door.getKeyID()));}
-			}else {
-				if(!this.wallCords.contains(door.getPosition())) {
-					this.wallCords.add(door.getPosition());
-					gui.addImage(new Door("DoorClosed", door.getPosition(), door.getDestinationRoom(), door.getDestinationPoint(), door.getKeyID()));}
-			}
-		}
+		
 		
 		
 		if(((Hero) hero).getLife()> 0) {
@@ -140,7 +154,7 @@ public class EngineExample implements Observer {
 		}
 		
 		for(GameElement elem :elements) {
-			if(elem.getName().contains("Door")) {this.lockDoorPos.add((Door) elem);}
+			if(elem.getName().contains("Door")) {this.lockDoors.add((Door) elem);}
 			
 				gui.addImage(elem);}
 			
@@ -189,14 +203,15 @@ public class EngineExample implements Observer {
 		for(Room a : rooms) {
 			if(a.getNumber().contains(this.atual)) {
 				
-				a.setAll(this.elements, this.wallCords, this.everyPos, this.lockDoorPos);
+				a.setAll(this.elements, this.wallCords, this.everyPos, this.lockDoors);
 			}
 		}
 	}
 	
 	
 	private void updateLife() {
-		double life = ((Hero) hero).getLife();
+		
+		int life = ((Hero) hero).getLife();
 		
 		for(int j = 0; j != 5; j++) {
 			gui.addImage(new Life("Red",new Point2D((int) j,10)));
@@ -214,11 +229,13 @@ public class EngineExample implements Observer {
 	
 	
 	private void updatePos() {
+		
 		this.everyPos = new ArrayList<>();
 		for(GameElement elem :elements) {
 			if((elem.getName().contains("Door")) || (elem.getName().contains("Sword")) || (elem.getName().contains("HealingPotion"))
-					|| (elem.getName().contains("Armor"))|| (elem.getName().contains("Treasure"))|| (elem.getName().contains("Key"))) {
-			}else {
+					|| (elem.getName().contains("Armor"))|| (elem.getName().contains("Key")) || elem.getName().contains("Treasure")) {}
+		
+			else{
 				everyPos.add(elem.getPosition());}
 			}
 			
@@ -229,11 +246,31 @@ public class EngineExample implements Observer {
 	
 	private void doorsUpdate() throws FileNotFoundException {
 		
+		for(Door door: lockDoors) {
+			if(door.getName().contains("Closed") && !(lockDoorsPos.contains(door.getPosition()))) {
+				lockDoorsPos.add(door.getPosition());
+			}
+			else if(door.getName().contains("Open") && (lockDoorsPos.contains(door.getPosition()))) {
+				lockDoorsPos.add(door.getPosition());
+			}
+		}
+		
+		
+		
+		
+		
+		
+		
 		LevelPassing b = new LevelPassing();
-		this.lockDoorPos = b.verifyDoor(hero, this.lockDoorPos,keys, gui);
-		for(Door door : lockDoorPos) {
+		this.lockDoors = b.verifyDoor(hero, this.lockDoors,keys, gui);
+		for(Door door : lockDoors) {
 			if(door.getState() == 1) {
-				wallCords.remove(door.getPosition());
+				
+					
+		
+					
+				lockDoorsPos.remove(door.getPosition());
+				
 				
 				
 				if(hero.getPosition().equals(door.getPosition())) {
@@ -247,7 +284,7 @@ public class EngineExample implements Observer {
 						if(item.getName().contains("Key")) {((Hero) hero).removeInventory(item,gui);}
 					}
 					
-					for(Door door1 : lockDoorPos) {
+					for(Door door1 : lockDoors) {
 						gui.removeImage(door1);
 					}
 					
@@ -265,10 +302,12 @@ public class EngineExample implements Observer {
 	
 	
 	private void moveAll(int key) {
-		((Hero) hero).move(everyPos,key);
+		
+		((Hero) hero).move(everyPos,lockDoorsPos, key);
 		everyPos.add(hero.getPosition());
 		for(GameElement elem :elements) {
 			if(elem instanceof Movable ) {
+				everyPos.addAll(lockDoorsPos);
 				((Movable) elem).move(everyPos,hero.getPosition(), this.turns);
 				everyPos.add(elem.getPosition());
 				}}
@@ -276,11 +315,23 @@ public class EngineExample implements Observer {
 	
 	
 	private void updateInventory() {
-		GameElement elem = inv_m.verify(elements, hero);
-		if(elem !=null) {
-			((Hero) hero).addInventory(elem);
-			gui.removeImage(elem);
 		
+		for(GameElement elem1 : ((Hero) hero).getInvetory()) {
+			elem1.setPosition(new Point2D(9-((Hero) hero).getInvetory().indexOf(elem1),10));
+		}
+		
+		
+		GameElement elem = inv_m.verify(elements, hero);
+		
+		if(elem !=null) {
+			if(elem.getName().contains("Treasure")) {
+				this.winSituation = true;
+		
+			}else {
+			((Hero) hero).addInventory(elem);
+			
+			gui.removeImage(elem);
+			
 			elements.remove(elem);
 			if(!elem.getName().contains("Key")) {
 				elem.setPosition(new Point2D(10-((Hero) hero).getNext(), 10));
@@ -302,7 +353,10 @@ public class EngineExample implements Observer {
 			}
 			
 			
+		}}for(GameElement elem1 : ((Hero) hero).getInvetory()) {
+			elem1.setPosition(new Point2D(9-((Hero) hero).getInvetory().indexOf(elem1),10));
 		}
+		
 	}
 	
 	public void statsLists() {
@@ -318,7 +372,7 @@ public class EngineExample implements Observer {
 		}
 		System.out.println();
 		System.out.print("lockDoorPos -> ");
-		for(Door elem: lockDoorPos) {
+		for(Door elem: lockDoors) {
 			System.out.print(elem.getKeyID()+ ", ");
 		}
 		System.out.println();
@@ -333,6 +387,11 @@ public class EngineExample implements Observer {
 			System.out.print(elem.getNumber()+ ", ");
 		}
 		System.out.println();
+		System.out.print("Elements -> ");
+		for(Point2D elem: lockDoorsPos) {
+			System.out.print(elem.toString()+ ", ");
+		}
+		System.out.println();
 		System.out.println("---------------------------------");
 	}
 	
@@ -341,9 +400,27 @@ public class EngineExample implements Observer {
 	@Override
 	public void update(Observed source) {
 		
-		if (ImageMatrixGUI.getInstance().wasWindowClosed() || 0>= (((Hero) hero).getLife())) {
+		if (ImageMatrixGUI.getInstance().wasWindowClosed() || 0>= (((Hero) hero).getLife()) ) {
 			gui.removeImage(hero);
-			System.out.println("Ending");	}
+			gui.setMessage("You Lose!\nYour pontuation was: " + score.updatePoints((Hero) hero, turns )+ "\n The game will restart automatically!");
+			System.out.println("Ending");
+			try {
+				restart();
+			} catch (FileNotFoundException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}}
+		else if(winSituation){
+			
+			gui.setMessage("You Win!\nYour pontuation was: " + score.updatePoints((Hero) hero, turns ) + "\n The game will restart automatically!");
+			try {
+				restart();
+			} catch (FileNotFoundException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+		}
 		else {
 			sincRooms();
 			updatePos();
@@ -359,13 +436,14 @@ public class EngineExample implements Observer {
 				e.printStackTrace();
 			}
 			hits(key);
-			
+			updateLife();
 			System.out.println(score.updatePoints((Hero) hero, turns));
 
 			turns++;
 			
 			
 			gui.setStatusMessage("ROGUE Starter Package - Turns:" + turns);
+			gui.setStatusMessage("Score: " + score.updatePoints((Hero) hero, turns));
 			gui.update();
 		}
 	}

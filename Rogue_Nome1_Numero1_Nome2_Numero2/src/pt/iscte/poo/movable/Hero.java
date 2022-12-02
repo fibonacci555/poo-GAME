@@ -30,8 +30,8 @@ public class Hero extends GameElement implements Movable{
 		return "Hero";
 	}
 
-	public void move(ArrayList<Point2D> arr, int key) {
-		if(Direction.isDirection(key) && !arr.contains(super.getPosition().plus(Direction.directionFor(key).asVector()))){
+	public void move(ArrayList<Point2D> arr,ArrayList<Point2D> doors, int key) {
+		if(Direction.isDirection(key) && !doors.contains(super.getPosition().plus(Direction.directionFor(key).asVector()))&&!arr.contains(super.getPosition().plus(Direction.directionFor(key).asVector()))){
 			  super.setPosition(super.getPosition().plus(Direction.directionFor(key).asVector()));
 		}
 	}
@@ -57,6 +57,10 @@ public class Hero extends GameElement implements Movable{
 			
 		
 		
+	}
+	
+	public void setNext(int next) {
+		this.next = next;
 	}
 	
 	

@@ -34,8 +34,6 @@ public class Point2D implements Serializable { // Added 23-Apr-2018
 		y = (int)point.getY();
 	}
 
-	
-
 	public int getX() {
 		return x;
 	}

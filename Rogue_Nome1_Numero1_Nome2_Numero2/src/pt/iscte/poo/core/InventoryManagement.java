@@ -52,7 +52,7 @@ public class InventoryManagement {
 					}
 	
 					hero.removeInventory(elem,gui);
-			
+					hero.setNext(0);
 				}
 				else {
 					
@@ -61,6 +61,7 @@ public class InventoryManagement {
 					everyPos.add(elem.getPosition());
 					hero.removeInventory(elem,gui);
 					gui.addImage(elem);
+					hero.setNext(0);
 					
 					
 					
@@ -84,7 +85,7 @@ public class InventoryManagement {
 					}
 	
 					hero.removeInventory(elem,gui);
-			
+					hero.setNext(1);
 				}
 				else {
 					
@@ -93,6 +94,7 @@ public class InventoryManagement {
 					everyPos.add(elem.getPosition());
 					hero.removeInventory(elem,gui);
 					gui.addImage(elem);
+					hero.setNext(1);
 					
 					
 					
@@ -117,7 +119,7 @@ public class InventoryManagement {
 					}
 	
 					hero.removeInventory(elem,gui);
-			
+					hero.setNext(2);
 				}
 				else {
 					elem.setPosition(hero.getPosition().plus(new Vector2D(1,0)));
@@ -125,7 +127,7 @@ public class InventoryManagement {
 					everyPos.add(elem.getPosition());
 					hero.removeInventory(elem,gui);
 					gui.addImage(elem);
-					
+					hero.setNext(2);
 					
 					
 				
