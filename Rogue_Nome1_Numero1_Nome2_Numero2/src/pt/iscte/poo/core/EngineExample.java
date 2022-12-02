@@ -360,39 +360,39 @@ public class EngineExample implements Observer {
 	}
 	
 	public void statsLists() {
-		System.out.println("---------------------------------");
-		System.out.print("Elements -> ");
-		for(GameElement elem: elements) {
-			System.out.print(elem.getName()+ ", ");
-		}
-		System.out.println();
-		System.out.print("Keys -> ");
-		for(Key elem: keys) {
-			System.out.print(elem.getID()+ ", ");
-		}
-		System.out.println();
-		System.out.print("lockDoorPos -> ");
-		for(Door elem: lockDoors) {
-			System.out.print(elem.getKeyID()+ ", ");
-		}
-		System.out.println();
-		
-		System.out.print("Inventory -> ");
-		for(GameElement elem: ((Hero) hero).getInvetory()) {
-			System.out.print(elem.getName()+ ", ");
-		}
-		System.out.println();
-		System.out.print("Rooms -> ");
-		for(Room elem: rooms) {
-			System.out.print(elem.getNumber()+ ", ");
-		}
-		System.out.println();
-		System.out.print("Elements -> ");
-		for(Point2D elem: lockDoorsPos) {
-			System.out.print(elem.toString()+ ", ");
-		}
-		System.out.println();
-		System.out.println("---------------------------------");
+//		System.out.println("---------------------------------");
+//		System.out.print("Elements -> ");
+//		for(GameElement elem: elements) {
+//			System.out.print(elem.getName()+ ", ");
+//		}
+//		System.out.println();
+//		System.out.print("Keys -> ");
+//		for(Key elem: keys) {
+//			System.out.print(elem.getID()+ ", ");
+//		}
+//		System.out.println();
+//		System.out.print("lockDoorPos -> ");
+//		for(Door elem: lockDoors) {
+//			System.out.print(elem.getKeyID()+ ", ");
+//		}
+//		System.out.println();
+//		
+//		System.out.print("Inventory -> ");
+//		for(GameElement elem: ((Hero) hero).getInvetory()) {
+//			System.out.print(elem.getName()+ ", ");
+//		}
+//		System.out.println();
+//		System.out.print("Rooms -> ");
+//		for(Room elem: rooms) {
+//			System.out.print(elem.getNumber()+ ", ");
+//		}
+//		System.out.println();
+//		System.out.print("Elements -> ");
+//		for(Point2D elem: lockDoorsPos) {
+//			System.out.print(elem.toString()+ ", ");
+//		}
+//		System.out.println();
+//		System.out.println("---------------------------------");
 	}
 	
 	
@@ -402,7 +402,7 @@ public class EngineExample implements Observer {
 		
 		if (ImageMatrixGUI.getInstance().wasWindowClosed() || 0>= (((Hero) hero).getLife()) ) {
 			gui.removeImage(hero);
-			gui.setMessage("You Lose!\nYour pontuation was: " + score.updatePoints((Hero) hero, turns )+ "\n The game will restart automatically!");
+			gui.setMessage("You Lose!\nYour pontuation was: " + score.updatePoints((Hero) hero, turns )+ "\nThe game will restart automatically!");
 			System.out.println("Ending");
 			try {
 				restart();
@@ -412,7 +412,7 @@ public class EngineExample implements Observer {
 			}}
 		else if(winSituation){
 			
-			gui.setMessage("You Win!\nYour pontuation was: " + score.updatePoints((Hero) hero, turns ) + "\n The game will restart automatically!");
+			gui.setMessage("You Win!\nYour pontuation was: " + score.updatePoints((Hero) hero, turns ) + "\nThe game will restart automatically!");
 			try {
 				restart();
 			} catch (FileNotFoundException e) {
