@@ -1,9 +1,17 @@
 package pt.iscte.poo.core;
 
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Scanner;
 
 import pt.iscte.poo.movable.Hero;
+
+
+
 
 public class Points {
 	long initialTime;
@@ -33,15 +41,73 @@ public class Points {
 
 	}
 	
-	public void updateFile(int pontuation, String name) {
+	public void cleanFile() {
+		File scoreFile = new File("score.txt");
 		try {
-		      FileWriter myWriter = new FileWriter("score.txt");
-		      myWriter.write(pontuation + ";" + name);
-		      myWriter.close();
-		      System.out.println("Successfully wrote to the file.");
-		    } catch (IOException e) {
-		      System.out.println("An error occurred.");
-		      e.printStackTrace();
-		    }
+			scoreFile.createNewFile();
+			FileWriter writer = new FileWriter(scoreFile);
+			for(int i = 0; i< 5; i++) {
+				writer.write("0;0\n");
+			}
+			writer.close();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		
 	}
-}	
+	
+	public ArrayList<String> updateFile(int pontuation, String name) {
+		File scoreFile = new File("score.txt");
+		ArrayList<String> top5scores = new ArrayList<String>();
+		ArrayList<String> top5 = new ArrayList<String>();
+		if(scoreFile.exists()) {
+			try {
+				Scanner reader = new Scanner(scoreFile);
+				
+				while(reader.hasNextLine()) {
+					
+					String[] data = reader.nextLine().split(";");
+					if(data.length != 0) {
+						top5scores.add(data[0]);
+						top5.add(data[0] + ";" + data[1]);
+					}
+					
+					
+				}
+				
+			
+			
+				for(String score : top5scores) {
+					if(Integer.parseInt(score) < pontuation) {
+						top5.remove(4);
+						top5.add(pontuation + ";" + name);
+						break;
+					}
+					
+				}
+			
+				
+				
+				Collections.sort(top5,(String a, String b) -> b.split(";")[0].compareTo(a.split(";")[0]));
+				
+				FileWriter writer = new FileWriter(scoreFile);
+				for(String score : top5) {
+				
+					writer.write(score + "\n");;
+					
+				}
+				
+				writer.close();
+				reader.close();
+				
+			}catch (IOException e) {
+				System.out.println("File Does Not Exist");
+			}
+		}return top5;
+		}}
+		
+		
+	
+

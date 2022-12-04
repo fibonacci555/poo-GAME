@@ -361,41 +361,6 @@ public class EngineExample implements Observer {
 		
 	}
 	
-	public void statsLists() {
-//		System.out.println("---------------------------------");
-//		System.out.print("Elements -> ");
-//		for(GameElement elem: elements) {
-//			System.out.print(elem.getName()+ ", ");
-//		}
-//		System.out.println();
-//		System.out.print("Keys -> ");
-//		for(Key elem: keys) {
-//			System.out.print(elem.getID()+ ", ");
-//		}
-//		System.out.println();
-//		System.out.print("lockDoorPos -> ");
-//		for(Door elem: lockDoors) {
-//			System.out.print(elem.getKeyID()+ ", ");
-//		}
-//		System.out.println();
-//		
-//		System.out.print("Inventory -> ");
-//		for(GameElement elem: ((Hero) hero).getInvetory()) {
-//			System.out.print(elem.getName()+ ", ");
-//		}
-//		System.out.println();
-//		System.out.print("Rooms -> ");
-//		for(Room elem: rooms) {
-//			System.out.print(elem.getNumber()+ ", ");
-//		}
-//		System.out.println();
-//		System.out.print("Elements -> ");
-//		for(Point2D elem: lockDoorsPos) {
-//			System.out.print(elem.toString()+ ", ");
-//		}
-//		System.out.println();
-//		System.out.println("---------------------------------");
-	}
 	
 	
 	
@@ -419,8 +384,19 @@ public class EngineExample implements Observer {
 		else if(winSituation){
 			String name = gui.askUser("Insert your name");
 			
-			gui.setMessage("You Win!\nYour pontuation was: " + final_score + "\nThe game will restart automatically!");
-			score.updateFile(final_score,name);
+			ArrayList<String> top5 = new ArrayList<String>();
+			top5 = score.updateFile(final_score,name);
+			gui.setMessage("You Win!\nYour score was: " + final_score + "\n" + "\n"
+					+ "Score List:" + "\n"
+					+ "1º - "+top5.get(0).split(";")[0] + " - " + top5.get(0).split(";")[1] + "\n"
+					+ "2º - "+top5.get(1).split(";")[0] + " - " + top5.get(1).split(";")[1] + "\n"
+					+ "3º - "+top5.get(2).split(";")[0] + " - " + top5.get(2).split(";")[1]+ "\n"
+					+ "4º - "+top5.get(3).split(";")[0] + " - " + top5.get(3).split(";")[1]+ "\n"
+					+ "5º - "+top5.get(4).split(";")[0] + " - " + top5.get(4).split(";")[1]
+							
+					
+							+ "\n\n\nThe game will restart automatically!"
+					);
 			try {
 				restart();
 			} catch (FileNotFoundException e) {
@@ -435,7 +411,7 @@ public class EngineExample implements Observer {
 			updatePos();
 			int key = ((ImageMatrixGUI) source).keyPressed();
 			moveAll(key);
-			statsLists();
+			
 			inv_m.keyUtility((Hero) hero, key, gui, elements, everyPos);
 			updateLife();
 			updateInventory();
