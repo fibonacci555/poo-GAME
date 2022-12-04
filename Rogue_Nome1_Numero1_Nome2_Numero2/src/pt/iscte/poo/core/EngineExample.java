@@ -37,6 +37,8 @@ public class EngineExample implements Observer {
 	private ArrayList<Door> lockDoors;
 	private ArrayList<Point2D> lockDoorsPos;
 	
+	private int final_score;
+	
 	private InventoryManagement inv_m;
 	private ArrayList<Room> rooms;
 	
@@ -400,7 +402,11 @@ public class EngineExample implements Observer {
 	@Override
 	public void update(Observed source) {
 		
-		if (ImageMatrixGUI.getInstance().wasWindowClosed() || 0>= (((Hero) hero).getLife()) ) {
+		if (ImageMatrixGUI.getInstance().wasWindowClosed()) {
+			
+		}
+				
+		else if(0>= (((Hero) hero).getLife()) ) {
 			gui.removeImage(hero);
 			gui.setMessage("You Lose!\nYour pontuation was: " + score.updatePoints((Hero) hero, turns )+ "\nThe game will restart automatically!");
 			System.out.println("Ending");
@@ -411,8 +417,10 @@ public class EngineExample implements Observer {
 				e.printStackTrace();
 			}}
 		else if(winSituation){
+			String name = gui.askUser("Insert your name");
 			
-			gui.setMessage("You Win!\nYour pontuation was: " + score.updatePoints((Hero) hero, turns ) + "\nThe game will restart automatically!");
+			gui.setMessage("You Win!\nYour pontuation was: " + final_score + "\nThe game will restart automatically!");
+			score.updateFile(final_score,name);
 			try {
 				restart();
 			} catch (FileNotFoundException e) {
@@ -422,6 +430,7 @@ public class EngineExample implements Observer {
 			
 		}
 		else {
+			final_score = score.updatePoints((Hero) hero, turns );
 			sincRooms();
 			updatePos();
 			int key = ((ImageMatrixGUI) source).keyPressed();
@@ -437,13 +446,13 @@ public class EngineExample implements Observer {
 			}
 			hits(key);
 			updateLife();
-			System.out.println(score.updatePoints((Hero) hero, turns));
-
+			
+			final_score = score.updatePoints((Hero) hero, turns );
 			turns++;
 			
 			
 			gui.setStatusMessage("ROGUE Starter Package - Turns:" + turns);
-			gui.setStatusMessage("Score: " + score.updatePoints((Hero) hero, turns));
+			gui.setStatusMessage("Score: " + final_score);
 			gui.update();
 		}
 	}

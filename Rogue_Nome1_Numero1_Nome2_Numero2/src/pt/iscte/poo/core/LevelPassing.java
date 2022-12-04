@@ -22,9 +22,7 @@ public class LevelPassing {
 			}
 		}
 		
-		for(String k : keys_IDS) {
-			System.out.println(k);
-		}
+		
 		
 		String door_id = null;
 		for(GameElement item : ((Hero) hero).getInvetory()) {

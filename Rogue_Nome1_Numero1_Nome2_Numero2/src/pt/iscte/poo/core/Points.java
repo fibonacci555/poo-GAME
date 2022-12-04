@@ -1,5 +1,8 @@
 package pt.iscte.poo.core;
 
+import java.io.FileWriter;
+import java.io.IOException;
+
 import pt.iscte.poo.movable.Hero;
 
 public class Points {
@@ -28,5 +31,17 @@ public class Points {
 		long Minutes = Seconds / 60;
 		return (Minutes + ":" + secondsDisplay);
 
+	}
+	
+	public void updateFile(int pontuation, String name) {
+		try {
+		      FileWriter myWriter = new FileWriter("score.txt");
+		      myWriter.write(pontuation + ";" + name);
+		      myWriter.close();
+		      System.out.println("Successfully wrote to the file.");
+		    } catch (IOException e) {
+		      System.out.println("An error occurred.");
+		      e.printStackTrace();
+		    }
 	}
 }	
