@@ -1,4 +1,4 @@
-package pt.iscte.poo.core;
+package pt.iscte.poo.item.subcore;
 
 
 import java.util.ArrayList;
@@ -6,6 +6,8 @@ import pt.iscte.poo.movable.Hero;
 
 import pt.iscte.poo.utils.Point2D;
 import pt.iscte.poo.utils.Vector2D;
+import pt.iscte.poo.core.GameElement;
+import pt.iscte.poo.core.Movable;
 import pt.iscte.poo.gui.ImageMatrixGUI;
 
 

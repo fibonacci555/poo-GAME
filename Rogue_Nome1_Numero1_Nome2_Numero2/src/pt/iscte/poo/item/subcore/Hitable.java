@@ -1,8 +1,10 @@
-package pt.iscte.poo.core;
+package pt.iscte.poo.item.subcore;
 
 
 import java.util.ArrayList;
 
+import pt.iscte.poo.core.GameElement;
+import pt.iscte.poo.core.Movable;
 import pt.iscte.poo.utils.Direction;
 
 public class Hitable {

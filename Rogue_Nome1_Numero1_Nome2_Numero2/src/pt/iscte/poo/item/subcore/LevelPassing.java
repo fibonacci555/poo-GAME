@@ -1,7 +1,9 @@
-package pt.iscte.poo.core;
+package pt.iscte.poo.item.subcore;
 
 import java.util.ArrayList;
 import java.util.ConcurrentModificationException;
+
+import pt.iscte.poo.core.GameElement;
 import pt.iscte.poo.gui.ImageMatrixGUI;
 import pt.iscte.poo.movable.Hero;
 import pt.iscte.poo.items.Key;

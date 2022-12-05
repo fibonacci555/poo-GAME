@@ -5,6 +5,9 @@ import java.util.List;
 
 import pt.iscte.poo.gui.ImageMatrixGUI;
 import pt.iscte.poo.gui.ImageTile;
+import pt.iscte.poo.item.subcore.Hitable;
+import pt.iscte.poo.item.subcore.InventoryManagement;
+import pt.iscte.poo.item.subcore.LevelPassing;
 import pt.iscte.poo.items.Key;
 import pt.iscte.poo.map_construction.Door;
 import pt.iscte.poo.map_construction.Floor;
@@ -17,14 +20,14 @@ import pt.iscte.poo.utils.Point2D;
 import java.io.FileNotFoundException;
 
 
-public class EngineExample implements Observer {
+public class Engine implements Observer {
 
 	public static final int GRID_HEIGHT = 11;
 	public static final int GRID_WIDTH = 10;
 	
 	private String atual;
 	
-	private static EngineExample INSTANCE = null;
+	private static Engine INSTANCE = null;
 	private ImageMatrixGUI gui = ImageMatrixGUI.getInstance();
 	private boolean winSituation;
 	private GameElement hero;
@@ -43,16 +46,16 @@ public class EngineExample implements Observer {
 	private InventoryManagement inv_m;
 	private ArrayList<Room> rooms;
 	
-	public static EngineExample getInstance() throws FileNotFoundException {
+	public static Engine getInstance() throws FileNotFoundException {
 		if (INSTANCE == null)
-			INSTANCE = new EngineExample();
+			INSTANCE = new Engine();
 		return INSTANCE;
 	}
 
 	
 	
 	
-	private EngineExample() throws FileNotFoundException {		
+	private Engine() throws FileNotFoundException {		
 		gui.registerObserver(this);
 		gui.setSize(GRID_WIDTH, GRID_HEIGHT);
 		gui.go();

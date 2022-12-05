@@ -1,10 +1,9 @@
-package pt.iscte.poo.core;
+package pt.iscte.poo.item.subcore;
 
 import java.util.Comparator;
 
 public class PointsComparator implements Comparator<String>{
 
-	
 	
 
 	@Override
