@@ -1,9 +1,7 @@
 package pt.iscte.poo.core;
 
-import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.ConcurrentModificationException;
-
 import pt.iscte.poo.gui.ImageMatrixGUI;
 import pt.iscte.poo.movable.Hero;
 import pt.iscte.poo.items.Key;

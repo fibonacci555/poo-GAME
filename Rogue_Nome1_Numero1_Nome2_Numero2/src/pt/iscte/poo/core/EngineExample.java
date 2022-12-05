@@ -34,6 +34,7 @@ public class EngineExample implements Observer {
 	private ArrayList<Key> keys;
 	private ArrayList<Point2D> wallCords;
 	private ArrayList<Point2D> everyPos;
+	private ArrayList<Point2D> everyDoor;
 	private ArrayList<Door> lockDoors;
 	private ArrayList<Point2D> lockDoorsPos;
 	
@@ -55,9 +56,13 @@ public class EngineExample implements Observer {
 		gui.registerObserver(this);
 		gui.setSize(GRID_WIDTH, GRID_HEIGHT);
 		gui.go();
+		
+		gui.setStatusMessage("ROGUE Starter Package - Turns:" + turns);
+		gui.update();
 		this.winSituation = false;
 		this.atual = "room0";
 		this.score = new Points();
+		this.everyDoor = new ArrayList<Point2D>();
 		this.keys = new ArrayList<Key>();
 		this.lockDoorsPos = new ArrayList<Point2D>();
 		hero = new Hero("Hero", new Point2D(4,4));
@@ -78,8 +83,7 @@ public class EngineExample implements Observer {
 		addObjects();
 		
 		
-		gui.setStatusMessage("ROGUE Starter Package - Turns:" + turns);
-		gui.update();
+		
 		
 		
 	}
@@ -133,7 +137,6 @@ public class EngineExample implements Observer {
 			this.elements = new ArrayList<GameElement>();
 			this.lockDoorsPos = new ArrayList<Point2D>();
 			this.wallCords = room_atual.getWallCords();
-//			this.lockDoorPos = room_atual.getDoors();
 			this.everyPos = room_atual.getEveryPos();
 			this.elements = room_atual.getElements();
 		} else {
@@ -177,13 +180,17 @@ public class EngineExample implements Observer {
 		
 	}
 	
+	@SuppressWarnings("unlikely-arg-type")
 	private void hits(int key) {
 		System.out.println("Vida: " + ((Hero) hero).getLife() + " | Ataque: "+ ((Hero) hero).getDamage());
+		
+		if(((Hero) hero).getScorpio()) {((Hero)hero).setLife(((Hero) hero).getLife() -1);}
+		
 		
 		Hitable h = new Hitable();
 		if(h.isHitable(elements,hero,key) != null) {
 			Movable mob = (Movable) h.isHitable(elements,hero,key);
-			
+			if(((ImageTile) mob).getName().contains("Scorpio")) {((Hero) hero).hitByScorpio();}
 			
 			mob.hit(((Hero) hero).getDamage());
 			((Hero) hero).hit(mob.getDamage());
@@ -249,6 +256,7 @@ public class EngineExample implements Observer {
 	private void doorsUpdate() throws FileNotFoundException {
 		
 		for(Door door: lockDoors) {
+			if(!everyDoor.contains(door.getPosition()))everyDoor.add(door.getPosition());
 			if(door.getName().contains("Closed") && !(lockDoorsPos.contains(door.getPosition()))) {
 				lockDoorsPos.add(door.getPosition());
 			}
@@ -309,15 +317,15 @@ public class EngineExample implements Observer {
 		everyPos.add(hero.getPosition());
 		for(GameElement elem :elements) {
 			if(elem instanceof Movable ) {
-				everyPos.addAll(lockDoorsPos);
+				everyPos.addAll(everyDoor);
 				((Movable) elem).move(everyPos,hero.getPosition(), this.turns);
 				everyPos.add(elem.getPosition());
 				}}
 	}
 	
 	
-	private void updateInventory() {
-		
+	private void updateInventory(int key) {
+		inv_m.keyUtility((Hero) hero, key, gui, elements, everyPos,wallCords, everyDoor);
 		for(GameElement elem1 : ((Hero) hero).getInvetory()) {
 			elem1.setPosition(new Point2D(9-((Hero) hero).getInvetory().indexOf(elem1),10));
 		}
@@ -359,6 +367,8 @@ public class EngineExample implements Observer {
 			elem1.setPosition(new Point2D(9-((Hero) hero).getInvetory().indexOf(elem1),10));
 		}
 		
+		
+		
 	}
 	
 	
@@ -378,7 +388,7 @@ public class EngineExample implements Observer {
 			try {
 				restart();
 			} catch (FileNotFoundException e) {
-				// TODO Auto-generated catch block
+			
 				e.printStackTrace();
 			}}
 		else if(winSituation){
@@ -400,7 +410,7 @@ public class EngineExample implements Observer {
 			try {
 				restart();
 			} catch (FileNotFoundException e) {
-				// TODO Auto-generated catch block
+				
 				e.printStackTrace();
 			}
 			
@@ -412,15 +422,16 @@ public class EngineExample implements Observer {
 			int key = ((ImageMatrixGUI) source).keyPressed();
 			moveAll(key);
 			
-			inv_m.keyUtility((Hero) hero, key, gui, elements, everyPos);
+			
 			updateLife();
-			updateInventory();
+			updateInventory(key);
 			try {
 				doorsUpdate();
 			} catch (FileNotFoundException e) {
 				e.printStackTrace();
 			}
 			hits(key);
+			System.out.println(((Hero) hero).getScorpio());
 			updateLife();
 			
 			final_score = score.updatePoints((Hero) hero, turns );

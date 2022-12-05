@@ -50,7 +50,7 @@ public class Scorpio extends GameElement implements Movable{
 
 	@Override
 	public int getDamage() {
-		return 1;
+		return this.damage;
 	}
 
 

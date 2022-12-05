@@ -1,6 +1,6 @@
 package pt.iscte.poo.core;
 
-import java.io.FileNotFoundException;
+
 import java.util.ArrayList;
 
 import pt.iscte.poo.map_construction.Door;
@@ -13,13 +13,10 @@ public class Room {
 	private ArrayList<Door> lockDoorPos;
 	private String number;
 	private int ativo; 
-	
+
 	public Room(String number) {
 		this.number = number;
-		ArrayList<GameElement> elements = new ArrayList<GameElement>();
-		ArrayList<Point2D> wallCords = new ArrayList<Point2D>();
-		ArrayList<Point2D> everyPos = new ArrayList<Point2D>();
-		ArrayList<Door> lockDoorPos = new ArrayList<Door>();
+		
 		ativo = 0;
 		
 		

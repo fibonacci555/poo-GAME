@@ -14,6 +14,7 @@ public class Hero extends GameElement implements Movable{
 	private int damage;
 	private ArrayList<GameElement> inventory;
 	private int next;
+	private boolean scorpio_hit;
 	
 
 	public Hero(String type, Point2D position) {
@@ -41,9 +42,13 @@ public class Hero extends GameElement implements Movable{
 			for(GameElement elem : inventory) {
 				if(elem.getName().contains("Armor")) {
 					if(Math.random() < 0.5) {
+						if(this.life - hit < 0) {
+							this.life = 0;
+						} else {
+							this.life = this.life - hit;
+							return;
+						}
 						
-						this.life = this.life - hit;
-						return;
 					}	else {
 						
 						return;
@@ -51,7 +56,12 @@ public class Hero extends GameElement implements Movable{
 				}
 			}
 		
-			this.life = this.life - hit;
+			if(this.life - hit < 0) {
+				this.life = 0;
+			} else {
+				this.life = this.life - hit;
+				return;
+			}
 			
 			
 			
@@ -101,6 +111,23 @@ public class Hero extends GameElement implements Movable{
 	
 	public int getNext() {
 		return next;
+	}
+	
+	public boolean getScorpio() {
+		return this.scorpio_hit;
+	}
+	
+	public void hitByScorpio() {
+		this.scorpio_hit = true;
+	}
+	
+	public void healPotion() {
+		this.scorpio_hit = false;
+		if(this.life >= 7) {
+			this.life = 10;
+		} else {
+			this.life = this.life + 3;
+		}
 	}
 	
 	

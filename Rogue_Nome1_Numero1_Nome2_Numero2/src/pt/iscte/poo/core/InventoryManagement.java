@@ -1,15 +1,12 @@
 package pt.iscte.poo.core;
 
-import java.io.FileNotFoundException;
-import java.util.ArrayList;
 
+import java.util.ArrayList;
 import pt.iscte.poo.movable.Hero;
+
 import pt.iscte.poo.utils.Point2D;
 import pt.iscte.poo.utils.Vector2D;
-import pt.iscte.poo.map_construction.Door;
-import pt.iscte.poo.map_construction.Life;
 import pt.iscte.poo.gui.ImageMatrixGUI;
-import pt.iscte.poo.items.Key;
 
 
 public class InventoryManagement {
@@ -26,7 +23,7 @@ public class InventoryManagement {
 			if(elem instanceof Movable || elem.getName().contains("Door")) {
 				
 			}else {
-				if((elem.getPosition().equals(hero.getPosition()) && ((Hero) hero).getInvetory().size() < 3)) {
+				if((elem.getPosition().equals(hero.getPosition()) && ((Hero) hero).getInvetory().size() < 3) || (elem.getPosition().equals(hero.getPosition()) && elem.getName().contains("Treasure"))) {
 					return elem;
 				}
 			}
@@ -36,27 +33,33 @@ public class InventoryManagement {
 	
 	
 	
-	public void keyUtility(Hero hero, int key, ImageMatrixGUI gui ,ArrayList<GameElement> elements , ArrayList<Point2D> everyPos) {
+	public void keyUtility(Hero hero, int key, ImageMatrixGUI gui ,ArrayList<GameElement> elements , ArrayList<Point2D> everyPos ,ArrayList<Point2D> walls ,ArrayList<Point2D> doors) {
+		ArrayList<Point2D> all = new ArrayList<Point2D>();
+		all = (ArrayList<Point2D>) walls.clone();
+		all.addAll(doors);
 		
-	
 		switch(key) {
 		case 49 : {
 			try {
 				GameElement elem = hero.getInvetory().get(0);
 				if(elem.getName().contains("HealingPotion")) {
 					
-					if(hero.getLife() >= 7) {
-						hero.setLife(10);
-					} else {
-						hero.setLife(hero.getLife() + 3);
-					}
+					hero.healPotion();
 	
 					hero.removeInventory(elem,gui);
 					hero.setNext(0);
 				}
 				else {
 					
-					elem.setPosition(hero.getPosition().plus(new Vector2D(1,0)));
+					if(!all.contains(hero.getPosition().plus(new Vector2D(1,0)))){
+						elem.setPosition(hero.getPosition().plus(new Vector2D(1,0)));
+					} else if(!all.contains(hero.getPosition().plus(new Vector2D(0,1)))){
+						elem.setPosition(hero.getPosition().plus(new Vector2D(0,1)));
+					} else if(!all.contains(hero.getPosition().plus(new Vector2D(-1,0)))){
+						elem.setPosition(hero.getPosition().plus(new Vector2D(-1,0)));
+					} else if(!all.contains(hero.getPosition().plus(new Vector2D(0,-1)))){
+						elem.setPosition(hero.getPosition().plus(new Vector2D(0,-1)));
+					}
 					elements.add(elem);
 					everyPos.add(elem.getPosition());
 					hero.removeInventory(elem,gui);
@@ -78,18 +81,23 @@ public class InventoryManagement {
 				GameElement elem = hero.getInvetory().get(1);
 				if(elem.getName().contains("HealingPotion")) {
 					
-					if(hero.getLife() >= 7) {
-						hero.setLife(10);
-					} else {
-						hero.setLife(hero.getLife() + 3);
-					}
+					hero.healPotion();
 	
 					hero.removeInventory(elem,gui);
 					hero.setNext(1);
 				}
 				else {
+					if(!all.contains(hero.getPosition().plus(new Vector2D(1,0)))){
+						elem.setPosition(hero.getPosition().plus(new Vector2D(1,0)));
+					} else if(!all.contains(hero.getPosition().plus(new Vector2D(0,1)))){
+						elem.setPosition(hero.getPosition().plus(new Vector2D(0,1)));
+					} else if(!all.contains(hero.getPosition().plus(new Vector2D(-1,0)))){
+						elem.setPosition(hero.getPosition().plus(new Vector2D(-1,0)));
+					} else if(!all.contains(hero.getPosition().plus(new Vector2D(0,-1)))){
+						elem.setPosition(hero.getPosition().plus(new Vector2D(0,-1)));
+					}
 					
-					elem.setPosition(hero.getPosition().plus(new Vector2D(1,0)));
+					
 					elements.add(elem);
 					everyPos.add(elem.getPosition());
 					hero.removeInventory(elem,gui);
@@ -112,17 +120,21 @@ public class InventoryManagement {
 				GameElement elem = hero.getInvetory().get(2);
 				if(elem.getName().contains("HealingPotion")) {
 					
-					if(hero.getLife() >= 7) {
-						hero.setLife(10);
-					} else {
-						hero.setLife(hero.getLife() + 3);
-					}
+					hero.healPotion();
 	
 					hero.removeInventory(elem,gui);
 					hero.setNext(2);
 				}
 				else {
-					elem.setPosition(hero.getPosition().plus(new Vector2D(1,0)));
+					if(!all.contains(hero.getPosition().plus(new Vector2D(1,0)))){
+						elem.setPosition(hero.getPosition().plus(new Vector2D(1,0)));
+					} else if(!all.contains(hero.getPosition().plus(new Vector2D(0,1)))){
+						elem.setPosition(hero.getPosition().plus(new Vector2D(0,1)));
+					} else if(!all.contains(hero.getPosition().plus(new Vector2D(-1,0)))){
+						elem.setPosition(hero.getPosition().plus(new Vector2D(-1,0)));
+					} else if(!all.contains(hero.getPosition().plus(new Vector2D(0,-1)))){
+						elem.setPosition(hero.getPosition().plus(new Vector2D(0,-1)));
+					}
 					elements.add(elem);
 					everyPos.add(elem.getPosition());
 					hero.removeInventory(elem,gui);
