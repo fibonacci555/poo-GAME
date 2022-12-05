@@ -56,9 +56,6 @@ public class EngineExample implements Observer {
 		gui.registerObserver(this);
 		gui.setSize(GRID_WIDTH, GRID_HEIGHT);
 		gui.go();
-		
-		gui.setStatusMessage("ROGUE Starter Package - Turns:" + turns);
-		gui.update();
 		this.winSituation = false;
 		this.atual = "room0";
 		this.score = new Points();
@@ -83,7 +80,8 @@ public class EngineExample implements Observer {
 		addObjects();
 		
 		
-		
+		gui.setStatusMessage("ROGUE Starter Package - Turns:" + turns);
+		gui.update();
 		
 		
 	}
