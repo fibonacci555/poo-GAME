@@ -35,6 +35,7 @@ public class InventoryManagement {
 	
 	
 	
+	@SuppressWarnings("unchecked")
 	public void keyUtility(Hero hero, int key, ImageMatrixGUI gui ,ArrayList<GameElement> elements , ArrayList<Point2D> everyPos ,ArrayList<Point2D> walls ,ArrayList<Point2D> doors) {
 		ArrayList<Point2D> all = new ArrayList<Point2D>();
 		all = (ArrayList<Point2D>) walls.clone();

@@ -11,6 +11,7 @@ import pt.iscte.poo.item.subcore.LevelPassing;
 import pt.iscte.poo.items.Key;
 import pt.iscte.poo.map_construction.Door;
 import pt.iscte.poo.map_construction.Floor;
+import pt.iscte.poo.map_construction.Grass;
 import pt.iscte.poo.map_construction.Life;
 import pt.iscte.poo.map_construction.Wall;
 import pt.iscte.poo.movable.Hero;
@@ -115,7 +116,9 @@ public class Engine implements Observer {
 		List<ImageTile> tileList = new ArrayList<>();
 		for (int x=0; x!=GRID_WIDTH; x++)
 			for (int y=0; y!=GRID_HEIGHT; y++)
-				tileList.add(new Floor(new Point2D(x,y)));
+				if(Math.random()<=0.8) {tileList.add(new Floor(new Point2D(x,y)));}
+				else {tileList.add(new Grass(new Point2D(x,y)));}
+				
 		gui.addImages(tileList);
 	}
 	

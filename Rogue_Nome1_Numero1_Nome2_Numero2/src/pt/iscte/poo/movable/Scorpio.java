@@ -4,7 +4,6 @@ import java.util.ArrayList;
 
 import pt.iscte.poo.core.GameElement;
 import pt.iscte.poo.core.Movable;
-import pt.iscte.poo.utils.Direction;
 import pt.iscte.poo.utils.Point2D;
 import pt.iscte.poo.utils.Vector2D;
 
