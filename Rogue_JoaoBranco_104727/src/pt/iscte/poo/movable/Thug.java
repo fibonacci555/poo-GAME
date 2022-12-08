@@ -33,10 +33,11 @@ public class Thug extends GameElement implements Movable{
 		return super.getLayer();
 	}
 	@Override
-	public void move(ArrayList<Point2D> arr, Point2D pos, int jogadas) {
+	public Point2D move(ArrayList<Point2D> arr, Point2D pos, int jogadas) {
 		Vector2D vec = Vector2D.movementVector(getPosition(),pos); 
 		if(!arr.contains(super.getPosition().plus(vec))){
 			super.setPosition(super.getPosition().plus(vec));}
+		return super.getPosition().plus(vec);
 	}
 
 

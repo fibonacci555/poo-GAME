@@ -7,14 +7,14 @@ import pt.iscte.poo.core.Movable;
 import pt.iscte.poo.utils.Point2D;
 import pt.iscte.poo.utils.Vector2D;
 
-public class Scorpio extends GameElement implements Movable{
+public class Thief extends GameElement implements Movable{
 	private int life;
 	private int damage;
 	
-	public Scorpio(String type, Point2D pos) {
+	public Thief(String type, Point2D pos) {
 		super(type, pos, 1);
-		this.life = 2;
-		this.damage = 1;
+		this.life = 5;
+		this.damage = 3;
 	}
 	
 	
@@ -33,10 +33,12 @@ public class Scorpio extends GameElement implements Movable{
 		return super.getLayer();
 	}
 	@Override
-	public void move(ArrayList<Point2D> arr, Point2D pos, int jogadas) {
+	public Point2D move(ArrayList<Point2D> arr, Point2D pos, int jogadas) {
 		Vector2D vec = Vector2D.movementVector(getPosition(),pos); 
 		if(!arr.contains(super.getPosition().plus(vec))){
 			super.setPosition(super.getPosition().plus(vec));}
+		
+		return super.getPosition().plus(vec);
 	}
 
 
@@ -49,7 +51,11 @@ public class Scorpio extends GameElement implements Movable{
 
 	@Override
 	public int getDamage() {
-		return this.damage;
+		// TODO Auto-generated method stub
+		if(Math.random() < 0.30) {
+			return this.damage;
+		}else {return 0;}
+		
 	}
 
 
@@ -63,5 +69,4 @@ public class Scorpio extends GameElement implements Movable{
 		
 		
 	}
-
 }

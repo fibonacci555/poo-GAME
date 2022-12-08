@@ -1,4 +1,4 @@
-package pt.iscte.poo.core;
+package pt.iscte.poo.item.subcore;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -7,7 +7,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Scanner;
 
-import pt.iscte.poo.item.subcore.PointsComparator;
 import pt.iscte.poo.movable.Hero;
 
 
@@ -57,7 +56,9 @@ public class Points {
 		
 	}
 	
-	public ArrayList<String> updateFile(int pontuation, String name) {
+	
+	
+	public String updateFile(int pontuation, String name) {
 		File scoreFile = new File("score.txt");
 		ArrayList<String> top5scores = new ArrayList<String>();
 		ArrayList<String> top5 = new ArrayList<String>();
@@ -91,6 +92,7 @@ public class Points {
 				
 				Collections.sort(top5,new PointsComparator());
 				
+				
 				FileWriter writer = new FileWriter(scoreFile);
 				for(String score : top5) {
 				
@@ -104,7 +106,29 @@ public class Points {
 			}catch (IOException e) {
 				System.out.println("File Does Not Exist");
 			}
-		}return top5;
+			
+			String top5_to_string = "You Win!\nYour score was: " + pontuation + "\n" + "\n"
+					+ "Score List:" + "\n"
+					+ "1º - "+top5.get(0).split(";")[0] + " - " + top5.get(0).split(";")[1] + "\n"
+					+ "2º - "+top5.get(1).split(";")[0] + " - " + top5.get(1).split(";")[1] + "\n"
+					+ "3º - "+top5.get(2).split(";")[0] + " - " + top5.get(2).split(";")[1]+ "\n"
+					+ "4º - "+top5.get(3).split(";")[0] + " - " + top5.get(3).split(";")[1]+ "\n"
+					+ "5º - "+top5.get(4).split(";")[0] + " - " + top5.get(4).split(";")[1]
+							
+					
+							+ "\n\n\nThe game will restart automatically!";
+			
+			
+			
+			
+			
+			
+			return top5_to_string;
+		} else {
+			cleanFile();
+			
+			return updateFile(pontuation,name);
+		}
 		}}
 		
 		

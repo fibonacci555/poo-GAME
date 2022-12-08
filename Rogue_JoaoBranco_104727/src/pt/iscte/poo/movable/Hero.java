@@ -150,7 +150,8 @@ public class Hero extends GameElement implements Movable{
 	}
 
 	@Override
-	public void move(ArrayList<Point2D> arr, Point2D pos, int jogadas) {
+	public Point2D move(ArrayList<Point2D> arr, Point2D pos, int jogadas) {
+		return null;
 		// TODO Auto-generated method stub
 		
 	}

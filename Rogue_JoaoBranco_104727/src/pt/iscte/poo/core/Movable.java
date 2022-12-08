@@ -8,7 +8,7 @@ public interface Movable {
 	
 	
 	int getLife();
-	void move(ArrayList<Point2D> arr, Point2D pos, int jogadas);
+	Point2D move(ArrayList<Point2D> arr, Point2D pos, int jogadas);
 	int getDamage();
 	void hit(int damage);
 }
