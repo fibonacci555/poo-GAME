@@ -46,7 +46,7 @@ public class Points {
 			scoreFile.createNewFile();
 			FileWriter writer = new FileWriter(scoreFile);
 			for(int i = 0; i< 5; i++) {
-				writer.write("0;0\n");
+				writer.write("99999999999999;null\n");
 			}
 			writer.close();
 		} catch (IOException e) {
@@ -80,7 +80,7 @@ public class Points {
 			
 			
 				for(String score : top5scores) {
-					if(Integer.parseInt(score) < pontuation) {
+					if(Integer.parseInt(score) > pontuation) {
 						top5.remove(4);
 						top5.add(pontuation + ";" + name);
 						break;

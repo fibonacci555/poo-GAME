@@ -19,6 +19,8 @@ import pt.iscte.poo.movable.Hero;
 import pt.iscte.poo.observer.Observed;
 import pt.iscte.poo.observer.Observer;
 import pt.iscte.poo.utils.Point2D;
+import pt.iscte.poo.utils.Vector2D;
+
 import java.io.FileNotFoundException;
 
 public class Engine implements Observer {
@@ -274,7 +276,9 @@ public class Engine implements Observer {
 				if (hero.getPosition().equals(door.getPosition())) {
 					sincRooms();
 					this.atual = door.getDestinationRoom();
-					gui.clearImages();
+					for(GameElement i: this.elements) {
+						gui.removeImage(i);
+					}
 					ArrayList<GameElement> inv = ((Hero) hero).getInvetory();
 
 					for (GameElement item : ((Hero) hero).getInvetory()) {
@@ -289,9 +293,13 @@ public class Engine implements Observer {
 
 					start();
 					System.out.println("Nivel passed");
-					hero.setPosition(door.getDestinationPoint());
+					if(door.getDestinationPoint().getX() == 0) {hero.setPosition(door.getDestinationPoint().plus(new Vector2D(1,0)));}
+					if(door.getDestinationPoint().getY() == 0) {hero.setPosition(door.getDestinationPoint().plus(new Vector2D(0,1)));}
+					if(door.getDestinationPoint().getX() == 9) {hero.setPosition(door.getDestinationPoint().plus(new Vector2D(-1,0)));}
+					if(door.getDestinationPoint().getY() == 9) {hero.setPosition(door.getDestinationPoint().plus(new Vector2D(0,-1)));}
+					
 					((Hero) hero).setInvetory(inv);
-
+					
 					break;
 				}
 			}
@@ -388,17 +396,21 @@ public class Engine implements Observer {
 			
 			int key = ((ImageMatrixGUI) source).keyPressed();
 			moveAll(key);
+			updateLife();
+			updateInventory(key);
 			try {
 				doorsUpdate();
 				
 			} catch (FileNotFoundException e) {
 
 			}
-			updateLife();
-			updateInventory(key);
-			
 			hits(key);
+			
+			
+			
+			
 			updateLife();
+			
 
 			final_score = score.updatePoints((Hero) hero, turns);
 			turns++;

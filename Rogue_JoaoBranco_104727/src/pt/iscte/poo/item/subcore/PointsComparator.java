@@ -10,7 +10,7 @@ public class PointsComparator implements Comparator<String>{
 	public int compare(String o1, String o2) {
 		int numero1 = Integer.parseInt(o1.split(";")[0]);
 		int numero2 = Integer.parseInt(o2.split(";")[0]);
-		return numero2 -numero1;
+		return numero1 -numero2;
 	}
 	
 }

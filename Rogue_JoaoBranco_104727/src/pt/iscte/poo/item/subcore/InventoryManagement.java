@@ -42,7 +42,7 @@ public class InventoryManagement {
 		all.addAll(doors);
 		
 		switch(key) {
-		case 49 : {
+		case 51 : {
 			try {
 				GameElement elem = hero.getInvetory().get(0);
 				if(elem.getName().contains("HealingPotion")) {
@@ -118,7 +118,7 @@ public class InventoryManagement {
 			catch (IndexOutOfBoundsException e) {
 			}
 		}
-		case 51 : {
+		case 49 : {
 			try {
 				GameElement elem = hero.getInvetory().get(2);
 				if(elem.getName().contains("HealingPotion")) {
